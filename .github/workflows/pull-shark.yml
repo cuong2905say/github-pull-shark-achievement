@@ -1,6 +1,53 @@
+name: Auto create and merge pull request
+
 on:
   workflow_dispatch:
 
 jobs:
-  Auto_create_and_merge_pull_request:
-  
+  automate-steps:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Authenticate GitHub CLI
+      env:
+        GITHUB_PAT: ${{ secrets.PAT }}
+      run: echo $GITHUB_PAT | gh auth login --with-token
+      
+    - name: Checkout main branch
+      uses: actions/checkout@v2
+      with:
+        ref: main
+        
+    # - name: Set config
+    #   run: |
+    #     git config --global user.name ${{github.actor}}
+    #     git config --global user.email cuong02n@gmail.com
+        
+
+    - name: Run script create and merge PR
+      env:
+        GH_TOKEN: ${{secrets.PAT}}
+      run: |
+        for i in {1..1205}
+        do
+          Timestamp=$(date +%s%3N)
+          git checkout -b pr_branch_$Timestamp # checkout to new branch
+          echo "$i" > file_$Timestamp.txt
+          git add .
+          git commit -m "Add new file"
+          git push -u origin pr_branch_$Timestamp
+
+          sleep 10
+          gh pr create --title "Pull Request $i" --body "This PR was created by GitHub Action, and the author is me" --base main --head pr_branch_$Timestamp
+          
+          sleep 10
+          PR_URL=$(gh pr list --state open --json url -q '.[0].url')
+          # gh pr comment $PR_URL --body "This is the comment created by Github Action, and the author is me."
+          sleep 10
+          gh pr merge $PR_URL --merge
+
+          sleep 2
+          git checkout main
+          git push origin --delete pr_branch_$Timestamp
+        done
