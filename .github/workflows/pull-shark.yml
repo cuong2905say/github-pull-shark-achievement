@@ -38,13 +38,13 @@ jobs:
           git commit -m "Add new file"
           git push -u origin pr_branch_$Timestamp
 
-          sleep 10
+          sleep 8
           gh pr create --title "Pull Request $i" --body "This PR was created by GitHub Action, and the author is me" --base master --head pr_branch_$Timestamp
           
-          sleep 10
+          sleep 8
           PR_URL=$(gh pr list --state open --json url -q '.[0].url')
           # gh pr comment $PR_URL --body "This is the comment created by Github Action, and the author is me."
-          sleep 10
+          sleep 8
           gh pr merge $PR_URL --merge
 
           sleep 2
