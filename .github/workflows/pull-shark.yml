@@ -15,7 +15,7 @@ jobs:
       run: echo $GITHUB_PAT | gh auth login --with-token
       
     - name: Checkout main branch
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         ref: main
         
