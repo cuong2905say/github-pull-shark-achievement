@@ -19,10 +19,10 @@ jobs:
       with:
         ref: master
         
-    # - name: Set config
-    #   run: |
-    #     git config --global user.name ${{github.actor}}
-    #     git config --global user.email cuong02n@gmail.com
+    - name: Set config
+      run: |
+        git config --global user.name "$(git log -n 1 --pretty=format:%an)"
+        git config --global user.email "$(git log -n 1 --pretty=format:%ae)"
         
 
     - name: Run script create and merge PR
