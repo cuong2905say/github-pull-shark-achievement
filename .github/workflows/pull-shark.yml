@@ -29,7 +29,7 @@ jobs:
       env:
         GH_TOKEN: ${{secrets.PAT}}
       run: |
-        for i in {1..2}
+        for i in {1..1024}
         do
           Timestamp=$(date +%s%3N)
           git checkout -b pr_branch_$Timestamp # checkout to new branch
