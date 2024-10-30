@@ -14,10 +14,10 @@ jobs:
         GITHUB_PAT: ${{ secrets.PAT }}
       run: echo $GITHUB_PAT | gh auth login --with-token
       
-    - name: Checkout main branch
+    - name: Checkout master branch
       uses: actions/checkout@v3
       with:
-        ref: main
+        ref: master
         
     # - name: Set config
     #   run: |
@@ -39,7 +39,7 @@ jobs:
           git push -u origin pr_branch_$Timestamp
 
           sleep 10
-          gh pr create --title "Pull Request $i" --body "This PR was created by GitHub Action, and the author is me" --base main --head pr_branch_$Timestamp
+          gh pr create --title "Pull Request $i" --body "This PR was created by GitHub Action, and the author is me" --base master --head pr_branch_$Timestamp
           
           sleep 10
           PR_URL=$(gh pr list --state open --json url -q '.[0].url')
@@ -48,6 +48,6 @@ jobs:
           gh pr merge $PR_URL --merge
 
           sleep 2
-          git checkout main
+          git checkout master
           git push origin --delete pr_branch_$Timestamp
         done
